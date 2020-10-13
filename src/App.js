@@ -13,7 +13,6 @@ function App() {
   useEffect(() => {
       const fetchData = async () => {
         const result = await axios(request);
-        console.log(result);
         setData(
           sortBy(
             map(result.data.RAW,
@@ -56,7 +55,6 @@ function App() {
       </>
     )
   }
-  console.log(data);
   return (
     <>
       <div className="app">
@@ -98,8 +96,8 @@ function App() {
           border-top: 1px solid #c6cbd1;
         }
         .row:nth-child(2n) {
-					background-color: #f6f8fa;
-				}
+          background-color: #f6f8fa;
+        }
         .cell {
           padding: 6px 13px;
         }
