@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { ajax } from 'rxjs/ajax';
 import sortBy from 'lodash/sortBy';
 import map from 'lodash/map';
 import numeral from 'numeral';
@@ -12,31 +12,37 @@ function App() {
   const [data, setData] = useState(null);
   useEffect(() => {
       const fetchData = async () => {
-        const result = await axios(request);
-        setData(
-          sortBy(
-            map(result.data.RAW,
-              (({
-                USD,
-              }) => {
-                const {
-                  FROMSYMBOL,
-                  PRICE,
-                  OPENDAY,
-                  CHANGEPCT24HOUR,
-                } = USD;
+        const prices$ = ajax.getJSON(request);
+        prices$.subscribe(
+          res => {
+            console.log(res)
+            setData(
+              sortBy(
+                map(res.RAW,
+                  (({
+                    USD,
+                  }) => {
+                    const {
+                      FROMSYMBOL,
+                      PRICE,
+                      OPENDAY,
+                      CHANGEPCT24HOUR,
+                    } = USD;
 
-                return ({
-                  symbol: FROMSYMBOL,
-                  price: PRICE,
-                  openingPrice: OPENDAY,
-                  difference: OPENDAY - PRICE,
-                  changePct24Hour: CHANGEPCT24HOUR,
-                })
-              }),
-            ),
-            [function(o) { return o.changePct24Hour; }],
-          ).reverse()
+                    return ({
+                      symbol: FROMSYMBOL,
+                      price: PRICE,
+                      openingPrice: OPENDAY,
+                      difference: OPENDAY - PRICE,
+                      changePct24Hour: CHANGEPCT24HOUR,
+                    })
+                  }),
+                ),
+                [function(o) { return o.changePct24Hour; }],
+              ).reverse()
+            );
+          },
+          err => console.error(err)
         );
     };
 
