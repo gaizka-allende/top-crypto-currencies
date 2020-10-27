@@ -4,9 +4,10 @@ import { timer } from 'rxjs';
 import sortBy from 'lodash/sortBy';
 import map from 'lodash/map';
 import numeral from 'numeral';
+import clsx from 'clsx';
 
 const request = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,XRP,USDT,BCH,BSV,LTC,EOS,BNB,XTZ&tsyms=USD';
-const currencyFormat = '$ 0,0[.]00';
+const currencyFormat = '$0,0[.]00';
 const percentageFormat = '0[.]00';
 
 const poll = timer(0, 5000);
@@ -81,8 +82,8 @@ function App() {
                   <td className="cell">{symbol}</td>
                   <td className="cell">{numeral(price).format(currencyFormat)}</td>
                   <td className="cell">{numeral(openingPrice).format(currencyFormat)}</td>
-                  <td className="cell">
-                    {`${numeral(changePct24Hour).format(percentageFormat)}% (${numeral(difference).format(currencyFormat)})`}
+                  <td className={clsx('cell', difference > 0 ? 'positive' : 'negative')}>
+                    {`${difference < 0 ? '-' : ''}${numeral(changePct24Hour).format(percentageFormat)}% (${numeral(difference).format(currencyFormat)})`}
                   </td>
                 </tr>
               ))
@@ -107,6 +108,12 @@ function App() {
         }
         .cell {
           padding: 6px 13px;
+        }
+        .positive {
+          background-color: green;
+        }
+        .negative {
+          background-color: red;
         }
       `}</style>
     </>
