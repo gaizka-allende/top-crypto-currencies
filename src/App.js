@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ajax } from 'rxjs/ajax';
+import { timer } from 'rxjs';
 import sortBy from 'lodash/sortBy';
 import map from 'lodash/map';
 import numeral from 'numeral';
@@ -8,45 +9,45 @@ const request = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC
 const currencyFormat = '$ 0,0[.]00';
 const percentageFormat = '0[.]00';
 
+const poll = timer(0, 5000);
+
 function App() {
   const [data, setData] = useState(null);
   useEffect(() => {
-      const fetchData = async () => {
-        const prices$ = ajax.getJSON(request);
-        prices$.subscribe(
-          res => {
-            console.log(res)
-            setData(
-              sortBy(
-                map(res.RAW,
-                  (({
-                    USD,
-                  }) => {
-                    const {
-                      FROMSYMBOL,
-                      PRICE,
-                      OPENDAY,
-                      CHANGEPCT24HOUR,
-                    } = USD;
+    poll.subscribe(() => {
+      const prices$ = ajax.getJSON(request);
+      prices$.subscribe(
+        res => {
+          console.log('getting data');
+          setData(
+            sortBy(
+              map(res.RAW,
+                (({
+                  USD,
+                }) => {
+                  const {
+                    FROMSYMBOL,
+                    PRICE,
+                    OPENDAY,
+                    CHANGEPCT24HOUR,
+                  } = USD;
 
-                    return ({
-                      symbol: FROMSYMBOL,
-                      price: PRICE,
-                      openingPrice: OPENDAY,
-                      difference: OPENDAY - PRICE,
-                      changePct24Hour: CHANGEPCT24HOUR,
-                    })
-                  }),
-                ),
-                [function(o) { return o.changePct24Hour; }],
-              ).reverse()
-            );
-          },
-          err => console.error(err)
-        );
-    };
-
-    fetchData();
+                  return ({
+                    symbol: FROMSYMBOL,
+                    price: PRICE,
+                    openingPrice: OPENDAY,
+                    difference: OPENDAY - PRICE,
+                    changePct24Hour: CHANGEPCT24HOUR,
+                  })
+                }),
+              ),
+              [function(o) { return o.changePct24Hour; }],
+            ).reverse()
+          );
+        },
+        err => console.error(err)
+      )
+    });
   }, [])
   if (data === null) {
     return (
