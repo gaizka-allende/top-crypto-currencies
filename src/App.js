@@ -19,7 +19,6 @@ function App() {
       const prices$ = ajax.getJSON(request);
       prices$.subscribe(
         res => {
-          console.log('getting data');
           setData(
             sortBy(
               map(res.RAW,
