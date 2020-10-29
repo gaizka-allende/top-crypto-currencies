@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^7.26.3",
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^7.1.2",
     "clsx": "^1.1.1",
     "lodash": "^4.17.20",
     "numeral": "^2.0.6",
@@ -38,6 +34,10 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/dom": "^7.26.3",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "jest-environment-jsdom-sixteen": "^1.0.3"
   }
 }
