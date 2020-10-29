@@ -14,40 +14,47 @@ const poll = timer(0, 5000);
 
 function App() {
   const [data, setData] = useState(null);
+  let prices$;
   useEffect(() => {
+    let isMounted = true;
     poll.subscribe(() => {
-      const prices$ = ajax.getJSON(request);
-      prices$.subscribe(
-        res => {
-          setData(
-            sortBy(
-              map(res.RAW,
-                (({
-                  USD,
-                }) => {
-                  const {
-                    FROMSYMBOL,
-                    PRICE,
-                    OPENDAY,
-                    CHANGEPCT24HOUR,
-                  } = USD;
+      prices$ = ajax.getJSON(request);
+      if (isMounted) {
+        prices$.subscribe(
+          res => {
+            setData(
+              sortBy(
+                map(res.RAW,
+                  (({
+                    USD,
+                  }) => {
+                    const {
+                      FROMSYMBOL,
+                      PRICE,
+                      OPENDAY,
+                      CHANGEPCT24HOUR,
+                    } = USD;
 
-                  return ({
-                    symbol: FROMSYMBOL,
-                    price: PRICE,
-                    openingPrice: OPENDAY,
-                    difference: OPENDAY - PRICE,
-                    changePct24Hour: CHANGEPCT24HOUR,
-                  })
-                }),
-              ),
-              [function(o) { return o.changePct24Hour; }],
-            ).reverse()
-          );
-        },
-        err => console.error(err)
-      )
+                    return ({
+                      symbol: FROMSYMBOL,
+                      price: PRICE,
+                      openingPrice: OPENDAY,
+                      difference: OPENDAY - PRICE,
+                      changePct24Hour: CHANGEPCT24HOUR,
+                    })
+                  }),
+                ),
+                [function(o) { return o.changePct24Hour; }],
+              ).reverse()
+            );
+          },
+          err => console.error(err)
+        );
+      }
     });
+    return function() {
+      isMounted = false;
+    }
   }, [])
   if (data === null) {
     return (
