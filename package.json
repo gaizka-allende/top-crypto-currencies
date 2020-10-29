@@ -5,18 +5,17 @@
   "dependencies": {
     "clsx": "^1.1.1",
     "lodash": "^4.17.20",
+    "next": "^10.0.0",
     "numeral": "^2.0.6",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "3.4.3",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "rxjs": "^6.6.3",
     "styled-jsx": "^3.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "eslintConfig": {
     "extends": "react-app"
