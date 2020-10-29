@@ -4,9 +4,9 @@ import '@testing-library/jest-dom/extend-expect'
 import { ajax } from 'rxjs/ajax';
 import { Observable, of } from 'rxjs';
 
-import App from './App';
+import Top from './Top';
 
-describe('App', () => {
+describe('Top', () => {
   const originalAjaxGet = ajax.getJSON;
 
   afterEach(() => {
@@ -14,7 +14,7 @@ describe('App', () => {
   });
 
   test('renders loading', () => {
-    const { container, debug } = render(<App />);
+    const { container, debug } = render(<Top />);
     expect(container.querySelector('.loading')).not.toBeNull();
   });
 
@@ -23,7 +23,7 @@ describe('App', () => {
       return of({ RAW: {} })
     });
     ajax.getJSON = mockResponse;
-    const { container, debug } = render(<App />);
+    const { container, debug } = render(<Top />);
     await waitFor(() => expect(container.querySelector('.table')).not.toBeNull());
     expect(mockResponse).toHaveBeenCalled();
   });
